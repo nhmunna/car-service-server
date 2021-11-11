@@ -38,7 +38,7 @@ async function run() {
         app.post('/services', async (req, res) => {
             const service = req.body;
             const result = await servicesCollection.insertOne(service);
-            console.log(result);
+            // console.log(result);
             res.json(result);
         });
 
@@ -112,7 +112,7 @@ async function run() {
         //REVIEW API
         app.post('/review', async (req, res) => {
             const review = req.body;
-            console.log('order', review);
+            // console.log('order', review);
             const result = await reviewCollection.insertOne(review);
             res.json(result);
         });
@@ -134,7 +134,7 @@ async function run() {
         //ORDER API
         app.post('/orders', async (req, res) => {
             const order = req.body;
-            console.log('order', order);
+            // console.log('order', order);
             const result = await ordersCollection.insertOne(order);
             res.json(result);
         });
