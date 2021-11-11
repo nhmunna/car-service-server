@@ -25,12 +25,21 @@ async function run() {
         const servicesCollection = database.collection('services');
         const usersCollection = database.collection('users');
         const ordersCollection = database.collection('orders');
+        const reviewCollection = database.collection('review');
 
         //GET ALL SERVICES
         app.get('/services', async (req, res) => {
             const cursor = servicesCollection.find({});
             const services = await cursor.toArray();
             res.send(services);
+        });
+
+        //POST SERVICES
+        app.post('/services', async (req, res) => {
+            const service = req.body;
+            const result = await servicesCollection.insertOne(service);
+            console.log(result);
+            res.json(result);
         });
 
         //GET SINGLE SERVICE
@@ -72,6 +81,12 @@ async function run() {
         app.put('/users/admin', async (req, res) => {
             const user = req.body;
             const requester = req.decodedEmail;
+            // const filter = { email: user.email };
+            // const updateDoc = {
+            //     $set: { role: 'admin' }
+            // };
+            // const result = await usersCollection.updateOne(filter, updateDoc);
+            // res.json(result)
             if (requester) {
                 const requesterAccount = await usersCollection.findOne({ email: requester });
                 if (requesterAccount.role === 'admin') {
@@ -94,13 +109,44 @@ async function run() {
             res.json(result);
         })
 
+        //REVIEW API
+        app.post('/review', async (req, res) => {
+            const review = req.body;
+            console.log('order', review);
+            const result = await reviewCollection.insertOne(review);
+            res.json(result);
+        });
+
+        //GET ALL REVIEWS
+        app.get('/review', async (req, res) => {
+            const cursor = reviewCollection.find({});
+            const reviews = await cursor.toArray();
+            res.send(reviews);
+        });
+
+        //GET ALL ORDER
+        app.get('/orders/admin', async (req, res) => {
+            const cursor = ordersCollection.find({});
+            const orders = await cursor.toArray();
+            res.send(orders);
+        });
+
         //ORDER API
         app.post('/orders', async (req, res) => {
             const order = req.body;
             console.log('order', order);
             const result = await ordersCollection.insertOne(order);
             res.json(result);
-        })
+        });
+
+        //FIND ORDER BY EMAIL
+        app.get('/orders', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const cursor = ordersCollection.find(query);
+            const order = await cursor.toArray();
+            res.json(order)
+        });
     }
     finally {
         // await client.close()
