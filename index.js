@@ -51,6 +51,7 @@ async function run() {
             res.json(service);
         })
 
+        //FIND USER IS ADMIN
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email: email };
@@ -62,6 +63,7 @@ async function run() {
             res.json({ admin: isAdmin })
         })
 
+        //ADD USER
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
@@ -69,6 +71,7 @@ async function run() {
             res.json(result);
         });
 
+        //UPDATE USER
         app.put('/users', async (req, res) => {
             const user = req.body;
             const filter = { email: user.email };
@@ -78,6 +81,7 @@ async function run() {
             res.json(result);
         });
 
+        //ADD USER AS A ADMIN
         app.put('/users/admin', async (req, res) => {
             const user = req.body;
             const requester = req.decodedEmail;
